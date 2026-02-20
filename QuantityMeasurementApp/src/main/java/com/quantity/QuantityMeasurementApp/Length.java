@@ -4,16 +4,17 @@ import java.util.Objects;
 
 public class Length {
 
-    private final int value;
+    private final double value;
     private final LengthUnit unit;
 
-    public Length(int value, LengthUnit unit) {
+    public Length(double value, LengthUnit unit) {
+        if (unit == null) throw new IllegalArgumentException("Unit cannot be null");
         this.value = value;
         this.unit = unit;
     }
 
-    public int toInch() {
-        return unit.toInch(value);
+    public double toFeet() {
+        return unit.toFeet(value);
     }
 
     @Override
@@ -22,11 +23,13 @@ public class Length {
         if (!(obj instanceof Length)) return false;
 
         Length other = (Length) obj;
-        return this.toInch() == other.toInch();
+
+        return Math.abs(this.toFeet() - other.toFeet()) < 0.0001;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(toInch());
+        return Objects.hash(toFeet());
     }
 }
+

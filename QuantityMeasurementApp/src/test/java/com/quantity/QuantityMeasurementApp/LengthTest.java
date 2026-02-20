@@ -44,5 +44,32 @@ public class LengthTest {
 
         Assertions.assertEquals(l1, l2);
     }
+
+    //UC4 TestCases:
+
+    @Test
+    void yardToFeetEquality() {
+        Length yard = new Length(1, LengthUnit.YARDS);
+        Length feet = new Length(3, LengthUnit.FEET);
+
+        Assertions.assertEquals(yard, feet);
+    }
+
+    @Test
+    void yardToInchEquality() {
+        Length yard = new Length(1, LengthUnit.YARDS);
+        Length inch = new Length(36, LengthUnit.INCH);
+
+        Assertions.assertEquals(yard, inch);
+    }
+
+    @Test
+    void cmToInchEquality() {
+        Length cm = new Length(1, LengthUnit.CENTIMETERS);
+        Length inch = new Length(0.393701, LengthUnit.INCH);
+
+        Assertions.assertEquals(cm, inch);
+    }
+
 }
 

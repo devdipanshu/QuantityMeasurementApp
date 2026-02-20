@@ -1,17 +1,19 @@
 package com.quantity.QuantityMeasurementApp;
 
-
 public enum LengthUnit {
-    FEET(12),
-    INCH(1);
 
-    private final int value;
+    FEET(1.0),
+    INCH(1.0 / 12.0),
+    YARDS(3.0),
+    CENTIMETERS(0.0328084);
 
-    LengthUnit(int value) {
-        this.value = value;
+    private final double toFeet;
+
+    LengthUnit(double toFeet) {
+        this.toFeet = toFeet;
     }
 
-    public int toInch(int amount) {
-        return amount * value;
+    public double toFeet(double value) {
+        return value * toFeet;
     }
 }

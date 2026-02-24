@@ -71,5 +71,29 @@ public class LengthTest {
         Assertions.assertEquals(cm, inch);
     }
 
+    //UC5 TestCases
+
+    @Test
+    void convertFeetToInch() {
+        double result = Length.convert(1, LengthUnit.FEET, LengthUnit.INCH);
+        Assertions.assertEquals(12, result, 0.0001);
+    }
+
+    @Test
+    void convertYardToFeet() {
+        double result = Length.convert(1, LengthUnit.YARDS, LengthUnit.FEET);
+        Assertions.assertEquals(3, result, 0.0001);
+    }
+
+    @Test
+    void instanceConversion() {
+        Length yard = new Length(1, LengthUnit.YARDS);
+        Length feet = yard.convertTo(LengthUnit.FEET);
+
+        Assertions.assertEquals(new Length(3, LengthUnit.FEET), feet);
+    }
+
 }
+
+
 

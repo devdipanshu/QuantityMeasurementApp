@@ -31,5 +31,21 @@ public class QuantityMeasurementApp {
         Quantity gallon = new Quantity(1, VolumeUnit.GALLON);
         System.out.println("1 Gallon equals 3.78 Litre: " +
                 gallon.equals(new Quantity(3.78, VolumeUnit.LITRE)));
+
+        Quantity<TemperatureUnit> c0 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f32 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+
+        System.out.println("0°C equals 32°F: " + c0.equals(f32));
+
+        Quantity<TemperatureUnit> c100 = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f212 = c100.convertTo(TemperatureUnit.FAHRENHEIT);
+
+        System.out.println("100°C → Fahrenheit: " + f212.getValue());
+
+        try {
+            c100.add(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

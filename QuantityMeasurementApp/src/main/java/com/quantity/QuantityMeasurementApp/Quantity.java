@@ -10,13 +10,8 @@ public class Quantity<U extends Unit> {
     private final U unit;
 
     public Quantity(double value, U unit) {
-
-        if (unit == null)
-            throw new IllegalArgumentException("Unit cannot be null");
-
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid value");
-
+        if (unit == null) throw new IllegalArgumentException("Unit cannot be null");
+        if (!Double.isFinite(value)) throw new IllegalArgumentException("Invalid value");
         this.value = value;
         this.unit = unit;
     }
@@ -26,66 +21,38 @@ public class Quantity<U extends Unit> {
     }
 
     public Quantity<U> convertTo(U target) {
-
-        double base = this.toBaseUnit();
-        double converted = target.convertFromBaseUnit(base);
-
+        double converted = target.convertFromBaseUnit(this.toBaseUnit());
         return new Quantity<>(converted, target);
     }
 
-    // CENTRALIZED ARITHMETIC METHOD (UC13)
-    private Quantity<U> operate(Quantity<U> other, U target, char operation) {
-
-        double base1 = this.toBaseUnit();
-        double base2 = other.toBaseUnit();
-
-        double resultBase;
-
-        switch (operation) {
-            case '+':
-                resultBase = base1 + base2;
-                break;
-            case '-':
-                resultBase = base1 - base2;
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported operation");
-        }
-
-        double result = target.convertFromBaseUnit(resultBase);
-        return new Quantity<>(result, target);
+    private void checkArithmeticSupport(String operation) {
+        unit.validateOperationSupport(operation);
     }
 
-    // ADD
     public Quantity<U> add(Quantity<U> other) {
-        return operate(other, this.unit, '+');
+        checkArithmeticSupport("addition");
+        double resultBase = this.toBaseUnit() + other.toBaseUnit();
+        return new Quantity<>(unit.convertFromBaseUnit(resultBase), unit);
     }
 
-    public Quantity<U> add(Quantity<U> other, U target) {
-        return operate(other, target, '+');
-    }
-
-    // SUBTRACT
     public Quantity<U> subtract(Quantity<U> other) {
-        return operate(other, this.unit, '-');
+        checkArithmeticSupport("subtraction");
+        double resultBase = this.toBaseUnit() - other.toBaseUnit();
+        return new Quantity<>(unit.convertFromBaseUnit(resultBase), unit);
     }
 
-    public Quantity<U> subtract(Quantity<U> other, U target) {
-        return operate(other, target, '-');
-    }
-
-    // DIVIDE
     public double divide(Quantity<U> other) {
+        checkArithmeticSupport("division");
         return this.toBaseUnit() / other.toBaseUnit();
     }
 
     @Override
     public boolean equals(Object obj) {
-
         if (this == obj) return true;
-        if (!(obj instanceof Quantity)) return false;
+        if (!(obj instanceof Quantity<?> other)) return false;
 
-        Quantity<?> other = (Quantity<?>) obj;
+        // Ensure same unit category
+        if (this.unit.getClass() != other.unit.getClass()) return false;
 
         return Math.abs(this.toBaseUnit() - other.toBaseUnit()) < EPSILON;
     }
@@ -94,4 +61,7 @@ public class Quantity<U extends Unit> {
     public int hashCode() {
         return Objects.hash(Math.round(toBaseUnit() / EPSILON));
     }
+
+    public double getValue() { return value; }
+    public U getUnit() { return unit; }
 }

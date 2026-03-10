@@ -33,57 +33,59 @@ public class Quantity<U extends Unit> {
         return new Quantity<>(converted, target);
     }
 
-    // ADDITION
-    public Quantity<U> add(Quantity<U> other) {
-
-        double sum = this.toBaseUnit() + other.toBaseUnit();
-        double result = unit.convertFromBaseUnit(sum);
-
-        return new Quantity<>(result, unit);
-    }
-
-    public Quantity<U> add(Quantity<U> other, U target) {
-
-        double sum = this.toBaseUnit() + other.toBaseUnit();
-        double result = target.convertFromBaseUnit(sum);
-
-        return new Quantity<>(result, target);
-    }
-
-    // SUBTRACTION (UC12)
-    public Quantity<U> subtract(Quantity<U> other) {
-
-        double diff = this.toBaseUnit() - other.toBaseUnit();
-        double result = unit.convertFromBaseUnit(diff);
-
-        return new Quantity<>(result, unit);
-    }
-
-    public Quantity<U> subtract(Quantity<U> other, U target) {
-
-        double diff = this.toBaseUnit() - other.toBaseUnit();
-        double result = target.convertFromBaseUnit(diff);
-
-        return new Quantity<>(result, target);
-    }
-
-    // DIVISION (UC12)
-    public double divide(Quantity<U> other) {
+    // CENTRALIZED ARITHMETIC METHOD (UC13)
+    private Quantity<U> operate(Quantity<U> other, U target, char operation) {
 
         double base1 = this.toBaseUnit();
         double base2 = other.toBaseUnit();
 
-        if (Math.abs(base2) < EPSILON)
-            throw new ArithmeticException("Division by zero");
+        double resultBase;
 
-        return base1 / base2;
+        switch (operation) {
+            case '+':
+                resultBase = base1 + base2;
+                break;
+            case '-':
+                resultBase = base1 - base2;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported operation");
+        }
+
+        double result = target.convertFromBaseUnit(resultBase);
+        return new Quantity<>(result, target);
+    }
+
+    // ADD
+    public Quantity<U> add(Quantity<U> other) {
+        return operate(other, this.unit, '+');
+    }
+
+    public Quantity<U> add(Quantity<U> other, U target) {
+        return operate(other, target, '+');
+    }
+
+    // SUBTRACT
+    public Quantity<U> subtract(Quantity<U> other) {
+        return operate(other, this.unit, '-');
+    }
+
+    public Quantity<U> subtract(Quantity<U> other, U target) {
+        return operate(other, target, '-');
+    }
+
+    // DIVIDE
+    public double divide(Quantity<U> other) {
+        return this.toBaseUnit() / other.toBaseUnit();
     }
 
     @Override
     public boolean equals(Object obj) {
 
         if (this == obj) return true;
-        if (!(obj instanceof Quantity<?> other)) return false;
+        if (!(obj instanceof Quantity)) return false;
+
+        Quantity<?> other = (Quantity<?>) obj;
 
         return Math.abs(this.toBaseUnit() - other.toBaseUnit()) < EPSILON;
     }

@@ -43,6 +43,20 @@ public class Length {
         return target.fromFeet(feet);
     }
 
+    // ✅ UC6 addition (result in first operand unit)
+    public Length add(Length other) {
+        if (other == null)
+            throw new IllegalArgumentException("Other length cannot be null");
+
+        if (!Double.isFinite(other.value))
+            throw new IllegalArgumentException("Invalid value");
+
+        double sumFeet = this.toFeet() + other.toFeet();
+        double result = this.unit.fromFeet(sumFeet);
+
+        return new Length(result, this.unit);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

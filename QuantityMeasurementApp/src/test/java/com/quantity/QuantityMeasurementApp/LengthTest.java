@@ -158,7 +158,60 @@ public class LengthTest {
         Length result = cm.add(inch);
 
         Assertions.assertEquals(5.08, result.convertTo(LengthUnit.CENTIMETERS).toFeet() /
-                LengthUnit.CENTIMETERS.toFeet(1), 0.01);
+                LengthUnit.CENTIMETERS.convertToBaseUnit(1), 0.01);
+    }
+    // UC7 TestCases (Addition with explicit target unit)
+
+    @Test
+    void additionFeetAndInchResultInFeet() {
+        Length feet = new Length(1, LengthUnit.FEET);
+        Length inch = new Length(12, LengthUnit.INCH);
+
+        Length result = feet.add(inch, LengthUnit.FEET);
+
+        Assertions.assertEquals(new Length(2, LengthUnit.FEET), result);
+    }
+
+    @Test
+    void additionFeetAndInchResultInInch() {
+        Length feet = new Length(1, LengthUnit.FEET);
+        Length inch = new Length(12, LengthUnit.INCH);
+
+        Length result = feet.add(inch, LengthUnit.INCH);
+
+        Assertions.assertEquals(new Length(24, LengthUnit.INCH), result);
+    }
+
+    @Test
+    void additionFeetAndFeetResultInYard() {
+        Length f1 = new Length(3, LengthUnit.FEET);
+        Length f2 = new Length(3, LengthUnit.FEET);
+
+        Length result = f1.add(f2, LengthUnit.YARDS);
+
+        Assertions.assertEquals(new Length(2, LengthUnit.YARDS), result);
+    }
+
+    @Test
+    void additionInchAndCmResultInCm() {
+        Length inch = new Length(1, LengthUnit.INCH);
+        Length cm = new Length(2.54, LengthUnit.CENTIMETERS);
+
+        Length result = inch.add(cm, LengthUnit.CENTIMETERS);
+
+        Assertions.assertEquals(new Length(5.08, LengthUnit.CENTIMETERS), result);
+    }
+
+    @Test
+    void additionWithExplicitTargetUnitCommutative() {
+        Length a = new Length(1, LengthUnit.FEET);
+        Length b = new Length(12, LengthUnit.INCH);
+
+        Assertions.assertEquals(
+                a.add(b, LengthUnit.FEET).toFeet(),
+                b.add(a, LengthUnit.FEET).toFeet(),
+                0.0001
+        );
     }
 
 }

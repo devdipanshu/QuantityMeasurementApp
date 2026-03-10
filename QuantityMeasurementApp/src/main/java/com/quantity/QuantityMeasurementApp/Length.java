@@ -10,59 +10,79 @@ public class Length {
     private final LengthUnit unit;
 
     public Length(double value, LengthUnit unit) {
-        if (unit == null) throw new IllegalArgumentException("Unit cannot be null");
-        if (!Double.isFinite(value)) throw new IllegalArgumentException("Invalid value");
+
+        if (unit == null)
+            throw new IllegalArgumentException("Unit cannot be null");
+
+        if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Invalid value");
 
         this.value = value;
         this.unit = unit;
     }
 
     public double toFeet() {
-        return unit.toFeet(value);
+        return unit.convertToBaseUnit(value);
     }
 
-    //  UC5 instance conversion
     public Length convertTo(LengthUnit targetUnit) {
-        if (targetUnit == null) throw new IllegalArgumentException("Target unit null");
 
-        double feet = this.toFeet();
-        double converted = targetUnit.fromFeet(feet);
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit null");
+
+        double feet = unit.convertToBaseUnit(value);
+        double converted = targetUnit.convertFromBaseUnit(feet);
 
         return new Length(converted, targetUnit);
     }
 
-    //  UC5 static API
     public static double convert(double value, LengthUnit source, LengthUnit target) {
+
         if (source == null || target == null)
             throw new IllegalArgumentException("Unit cannot be null");
 
         if (!Double.isFinite(value))
             throw new IllegalArgumentException("Invalid numeric value");
 
-        double feet = source.toFeet(value);
-        return target.fromFeet(feet);
+        double feet = source.convertToBaseUnit(value);
+        return target.convertFromBaseUnit(feet);
     }
 
-    // ✅ UC6 addition (result in first operand unit)
+    // UC6
     public Length add(Length other) {
+
         if (other == null)
             throw new IllegalArgumentException("Other length cannot be null");
 
-        if (!Double.isFinite(other.value))
-            throw new IllegalArgumentException("Invalid value");
-
         double sumFeet = this.toFeet() + other.toFeet();
-        double result = this.unit.fromFeet(sumFeet);
+        double result = this.unit.convertFromBaseUnit(sumFeet);
 
         return new Length(result, this.unit);
     }
 
+    // UC7
+    public Length add(Length other, LengthUnit targetUnit) {
+
+        if (other == null)
+            throw new IllegalArgumentException("Other length cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        double sumFeet = this.toFeet() + other.toFeet();
+        double result = targetUnit.convertFromBaseUnit(sumFeet);
+
+        return new Length(result, targetUnit);
+    }
+
     @Override
     public boolean equals(Object obj) {
+
         if (this == obj) return true;
         if (!(obj instanceof Length)) return false;
 
         Length other = (Length) obj;
+
         return Math.abs(this.toFeet() - other.toFeet()) < EPSILON;
     }
 

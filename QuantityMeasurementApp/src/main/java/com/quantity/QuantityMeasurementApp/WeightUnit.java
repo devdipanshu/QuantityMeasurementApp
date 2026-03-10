@@ -1,6 +1,6 @@
 package com.quantity.QuantityMeasurementApp;
 
-public enum WeightUnit {
+public enum WeightUnit implements Unit {
 
     KILOGRAM(1.0),
     GRAM(0.001),

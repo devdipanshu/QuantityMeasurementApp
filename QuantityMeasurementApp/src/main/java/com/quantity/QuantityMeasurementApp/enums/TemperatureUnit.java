@@ -1,4 +1,7 @@
-package com.quantity.QuantityMeasurementApp;
+package com.quantity.QuantityMeasurementApp.enums;
+
+import com.quantity.QuantityMeasurementApp.model.SupportsArithmetic;
+import com.quantity.QuantityMeasurementApp.model.Unit;
 
 import static java.lang.Math.round;
 

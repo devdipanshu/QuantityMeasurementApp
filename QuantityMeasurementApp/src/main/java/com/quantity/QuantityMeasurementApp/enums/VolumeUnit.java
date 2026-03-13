@@ -1,4 +1,6 @@
-package com.quantity.QuantityMeasurementApp;
+package com.quantity.QuantityMeasurementApp.enums;
+
+import com.quantity.QuantityMeasurementApp.model.Unit;
 
 public enum VolumeUnit implements Unit {
 

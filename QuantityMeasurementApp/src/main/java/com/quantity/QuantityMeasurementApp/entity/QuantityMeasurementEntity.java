@@ -1,3 +1,4 @@
+
 package com.quantity.QuantityMeasurementApp.entity;
 
 import java.io.Serializable;
@@ -17,6 +18,14 @@ public class QuantityMeasurementEntity implements Serializable {
         this.operand2 = operand2;
         this.result = result;
         this.operation = operation;
+    }
+
+    public double getOperand1() {
+        return operand1;
+    }
+
+    public double getOperand2() {
+        return operand2;
     }
 
     public double getResult() {

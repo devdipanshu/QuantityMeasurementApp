@@ -6,7 +6,7 @@ import com.quantity.QuantityMeasurementApp.enums.LengthUnit;
 import com.quantity.QuantityMeasurementApp.enums.TemperatureUnit;
 import com.quantity.QuantityMeasurementApp.enums.VolumeUnit;
 import com.quantity.QuantityMeasurementApp.enums.WeightUnit;
-import com.quantity.QuantityMeasurementApp.repository.QuantityMeasurementCacheRepository;
+import com.quantity.QuantityMeasurementApp.repository.QuantityMeasurementDBRepository;
 import com.quantity.QuantityMeasurementApp.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
@@ -16,7 +16,7 @@ public class QuantityMeasurementApp {
         QuantityMeasurementController controller =
                 new QuantityMeasurementController(
                         new QuantityMeasurementServiceImpl(
-                                QuantityMeasurementCacheRepository.getInstance()
+                                new QuantityMeasurementDBRepository()
                         )
                 );
 
@@ -63,7 +63,6 @@ public class QuantityMeasurementApp {
 
         System.out.println("100°C → Fahrenheit: " +
                 controller.convert(c100, TemperatureUnit.FAHRENHEIT).getValue());
-
         try {
             controller.add(c100, new QuantityDTO(50.0, TemperatureUnit.CELSIUS));
         } catch (UnsupportedOperationException e) {
